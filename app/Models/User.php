@@ -6,6 +6,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Stadium;
+use App\Models\Reservation;
+use App\Models\Review;
+use App\Models\Subscription;
+use App\Models\Offer;
 
 class User extends Authenticatable
 {
@@ -17,11 +22,16 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    'name',
+    'email',
+    'password',
+    'role',
+    'loyalty_points',
+    'referral_code',
+    'profile_image',
+];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -45,4 +55,25 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+            public function reservations()
+        {
+            return $this->hasMany(Reservation::class);
+        }
+
+        public function reviews()
+        {
+            return $this->hasMany(Review::class);
+        }
+
+        public function subscriptions()
+        {
+            return $this->hasMany(Subscription::class);
+        }
+
+        public function createdOffers()
+        {
+            return $this->hasMany(Offer::class, 'creator_id');
+        }
 }
