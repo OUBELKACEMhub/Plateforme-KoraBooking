@@ -8,7 +8,54 @@ use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
 {
-    
+    public function index(Request $request)
+    {
+        $stadiums = Stadium::query()
+            ->when($request->city, function ($query, $city) {
+                return $query->where('city', 'like', "%{$city}%");
+            })
+            ->when($request->max_price, function ($query, $maxPrice) {
+                return $query->where('price', '<=', $maxPrice);
+            })
+            ->get(); 
+
+        $weatherCity = $request->city ? $request->city : 'Safi';
+
+        $weatherKey = config('services.openweather.key');
+        $weatherResp = Http::get("https://api.openweathermap.org/data/2.5/weather", [
+            'q' => $weatherCity,
+            'appid' => $weatherKey,
+            'units' => 'metric',
+            'lang' => 'fr'
+        ]);
+        
+        $weather = $weatherResp->successful() ? $weatherResp->json() : null;
+        
+        $ai = $this->getAiCoachAdvice($weather, $weatherCity);
+
+        return view('dashboard', compact('stadiums', 'weather', 'ai'));
+    }
+
+    public function show($id)
+    {
+        $stadium = Stadium::findOrFail($id);
+        
+        $city = $stadium->city;
+        $weatherKey = config('services.openweather.key');
+        
+        $weatherResp = Http::get("https://api.openweathermap.org/data/2.5/weather", [
+            'q' => $city,
+            'appid' => $weatherKey,
+            'units' => 'metric',
+            'lang' => 'fr'
+        ]);
+        
+        $weather = $weatherResp->successful() ? $weatherResp->json() : null;
+        
+        $ai = $this->getAiCoachAdvice($weather, $city); 
+
+        return view('stadiums.show', compact('stadium', 'weather', 'ai'));
+    }
 
     private function getAiCoachAdvice($weather, $city)
     {
