@@ -51,4 +51,32 @@ class Stadium extends Model
         {
             return $this->belongsToMany(Offer::class, 'offer_stadium');
         }
+
+
+        public function getHasActiveOfferAttribute()
+    {
+        return $this->offers()
+                    ->whereDate('start_date', '<=', now())
+                    ->whereDate('end_date', '>=', now())
+                    ->exists();
+    }
+
+    public function getDiscountedPriceAttribute()
+    {
+        $originalPrice = $this->price;
+
+        // Kanjbdo a7ssan offre khddama l-youma (li fiha akbar pourcentage)
+        $activeOffer = $this->offers()
+                            ->whereDate('start_date', '<=', now())
+                            ->whereDate('end_date', '>=', now())
+                            ->orderByDesc('discount_percentage')
+                            ->first();
+
+        if ($activeOffer) {
+            $discountAmount = ($originalPrice * $activeOffer->discount_percentage) / 100;
+            return $originalPrice - $discountAmount;
+        }
+
+        return $originalPrice; // Ila makayn ta offre, kayrje3 l-prix 3adi
+    }
 }
