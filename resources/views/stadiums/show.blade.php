@@ -480,8 +480,16 @@
                                 <div class="bg-white p-2 space-y-2">
                                     <div class="flex justify-between text-sm text-slate-500">
                                         <span>Tarif (1 hr)</span>
-                                        <span
-                                            class="font-medium text-slate-800">${{ $stadium->price ?? '45.00' }}</span>
+                                        <div class="text-right">
+                                            @if ($stadium->has_active_offer)
+                                                <span
+                                                    class="line-through text-slate-400 text-xs mr-1">${{ $stadium->price }}</span>
+                                                <span
+                                                    class="font-bold text-green-600">${{ $stadium->discounted_price }}</span>
+                                            @else
+                                                <span class="font-medium text-slate-800">${{ $stadium->price }}</span>
+                                            @endif
+                                        </div>
                                     </div>
                                     <div class="flex justify-between text-sm text-slate-500">
                                         <span>Frais de service</span>
@@ -489,8 +497,8 @@
                                     </div>
                                     <div class="pt-2 mt-2 flex justify-between items-center">
                                         <span class="font-bold">Total</span>
-                                        <span
-                                            class="text-xl font-black text-primary">${{ $total ?? $stadium->price + 3 }}</span>
+                                        <span class="text-xl font-black text-primary">
+                                            ${{ $total ?? $stadium->discounted_price + 3 }} </span>
                                     </div>
                                 </div>
 
@@ -526,8 +534,8 @@
                                     <p class="text-sm font-bold text-slate-800" id="summary-time">Aujourd'hui à 18:00
                                     </p>
                                 </div>
-                                <span
-                                    class="text-xl font-black text-primary">${{ $total ?? $stadium->price + 3 }}</span>
+                                <span class="text-xl font-black text-primary">
+                                    ${{ $total ?? $stadium->discounted_price + 3 }} </span>
                             </div>
 
                             <div class="space-y-4">
