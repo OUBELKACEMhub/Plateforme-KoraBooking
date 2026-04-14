@@ -19,6 +19,7 @@ class Stadium extends Model
         'rate',
         'latitude',
         'longitude',
+        'manager_id',
     ];
 
     protected $casts = [
