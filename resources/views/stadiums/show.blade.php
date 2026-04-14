@@ -2,20 +2,14 @@
 <html lang="fr" class="light">
 
 <head>
-
     <meta charset="utf-8" />
-
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
-
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0"
         rel="stylesheet" />
-
 
     <script id="tailwind-config">
         tailwind.config = {
@@ -41,9 +35,7 @@
         }
     </script>
 
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         .leaflet-container {
@@ -53,6 +45,25 @@
         /* Classe pour forcer le remplissage des icônes Material (étoiles) */
         .icon-filled {
             font-variation-settings: 'FILL' 1;
+        }
+
+        /* Design zwine l-Scrollbar dyal les avis */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f8f6f6;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
     </style>
 
@@ -175,7 +186,6 @@
                                     <span class="text-[10px] font-black uppercase text-nav-dark">KoraBot Advisor</span>
                                 </div>
                                 <p class="text-sm italic text-slate-600">
-
                                     "{{ $ai['message'] ?? 'Conditions parfaites pour un match ! La température est idéale et aucune pluie n\'est prévue.' }}"
                                 </p>
                             </div>
@@ -232,6 +242,7 @@
 
                                 <div id="reviews-list-container" class="transition-opacity duration-300">
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
                                         <div class="md:col-span-1 flex flex-col">
                                             <div class="flex items-baseline gap-2 mb-1">
                                                 <span
@@ -249,9 +260,7 @@
                                             </div>
                                             <div
                                                 class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-6">
-
                                                 {{ $stadium->reviews->count() }}
-
                                                 Évaluation{{ $stadium->reviews->count() > 1 ? 's' : '' }}
                                             </div>
 
@@ -272,82 +281,74 @@
                                                             class="w-2 font-bold text-slate-400">{{ $i }}</span>
                                                         <div
                                                             class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-
                                                             <div class="h-full bg-primary rounded-full transition-all duration-500"
                                                                 style="width: {{ $percentages[$i] }}%;"></div>
-
                                                         </div>
                                                     </div>
                                                 @endfor
                                             </div>
                                         </div>
 
-                                        <div class="md:col-span-2 space-y-6">
-                                            @forelse ($stadium->reviews ?? [] as $review)
-                                                <div class="border-b border-slate-100 pb-6 last:border-0 last:pb-0">
-                                                    <div class="flex items-center gap-3 mb-3">
-                                                        <div
-                                                            class="w-10 h-10 rounded-full bg-nav-dark/10 text-nav-dark font-bold flex items-center justify-center text-sm uppercase">
+                                        <div class="md:col-span-2">
+                                            <div class="space-y-6 max-h-[320px] overflow-y-auto pr-4 custom-scrollbar">
+                                                @forelse ($stadium->reviews ?? [] as $review)
+                                                    <div
+                                                        class="border-b border-slate-100 pb-6 last:border-0 last:pb-0">
+                                                        <div class="flex items-center gap-3 mb-3">
 
-                                                            {{ substr($review->user->name ?? 'U', 0, 2) }}
-
-                                                        </div>
-                                                        <div>
-
-                                                            <h4 class="font-bold text-sm text-slate-900">
-
-
-                                                                {{ $review->user->name ?? 'Utilisateur Anonyme' }}</h4>
-
-                                                            <div class="flex items-center gap-2">
-
-                                                                <div class="flex text-primary text-[12px]">
-
-                                                                    @for ($i = 1; $i <= 5; $i++)
-                                                                        <span
-                                                                            class="material-symbols-outlined {{ $i <= $review->rating ? 'icon-filled text-primary' : 'text-slate-300' }} text-sm">
-
-                                                                            star
-
-                                                                        </span>
-                                                                    @endfor
-
+                                                            @if ($review->user && $review->user->profile_image)
+                                                                <img src="{{ asset('storage/' . $review->user->profile_image) }}"
+                                                                    alt="Profil"
+                                                                    class="w-10 h-10 rounded-full object-cover border border-slate-200">
+                                                            @else
+                                                                <div
+                                                                    class="w-10 h-10 rounded-full bg-nav-dark/10 text-nav-dark font-bold flex items-center justify-center text-sm uppercase">
+                                                                    {{ substr($review->user->name ?? 'U', 0, 2) }}
                                                                 </div>
+                                                            @endif
 
-                                                                <span
-                                                                    class="text-[10px] text-slate-400 font-medium">{{ $review->created_at->format('d M Y') }}</span>
-
+                                                            <div>
+                                                                <h4 class="font-bold text-sm text-slate-900">
+                                                                    {{ $review->user->name ?? 'Utilisateur Anonyme' }}
+                                                                </h4>
+                                                                <div class="flex items-center gap-2">
+                                                                    <div class="flex text-primary text-[12px]">
+                                                                        @for ($i = 1; $i <= 5; $i++)
+                                                                            <span
+                                                                                class="material-symbols-outlined {{ $i <= $review->rating ? 'icon-filled text-primary' : 'text-slate-300' }} text-sm">
+                                                                                star
+                                                                            </span>
+                                                                        @endfor
+                                                                    </div>
+                                                                    <span
+                                                                        class="text-[10px] text-slate-400 font-medium">{{ $review->created_at->format('d M Y') }}</span>
+                                                                </div>
                                                             </div>
-
                                                         </div>
+                                                        <p class="text-sm text-slate-600 leading-relaxed">
+                                                            {{ $review->comment }}
+                                                        </p>
                                                     </div>
-                                                    <p class="text-sm text-slate-600 leading-relaxed">
-
-                                                        {{ $review->comment }}</p>
-                                                </div>
-                                            @empty
-                                                <div
-                                                    class="text-center py-8 bg-slate-50 rounded-xl border border-slate-100 mt-4">
-                                                    <span
-                                                        class="material-symbols-outlined text-slate-300 text-4xl mb-2">forum</span>
-                                                    <p class="text-sm text-slate-500 font-medium">Aucun avis pour le
-                                                        moment.
-                                                    </p>
-                                                    <p class="text-xs text-slate-400 mt-1">Soyez le premier à partager
-                                                        votre
-                                                        expérience !</p>
-                                                </div>
-                                            @endforelse
+                                                @empty
+                                                    <div
+                                                        class="text-center py-8 bg-slate-50 rounded-xl border border-slate-100 mt-4">
+                                                        <span
+                                                            class="material-symbols-outlined text-slate-300 text-4xl mb-2">forum</span>
+                                                        <p class="text-sm text-slate-500 font-medium">Aucun avis pour
+                                                            le
+                                                            moment.
+                                                        </p>
+                                                        <p class="text-xs text-slate-400 mt-1">Soyez le premier à
+                                                            partager
+                                                            votre expérience !</p>
+                                                    </div>
+                                                @endforelse
+                                            </div>
                                         </div>
                                     </div>
-                                    <button
-                                        class="mt-6 text-xs font-bold text-slate-900 flex items-center gap-1 hover:text-primary transition-colors group">
-                                        voir plus <span
-                                            class="material-symbols-outlined text-sm group-hover:translate-y-0.5 transition-transform">expand_more</span>
-                                    </button>
                                 </div>
 
-                                <div id="review-form-container" class="hidden transition-opacity duration-300">
+                                <div id="review-form-container" class="hidden transition-opacity duration-300 mt-6">
                                     <form action="{{ route('reviews.store') ?? '#' }}" method="POST"
                                         class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-6">
                                         @csrf
@@ -385,12 +386,9 @@
                                             <label
                                                 class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Votre
                                                 commentaire</label>
-
-                                            <textarea name="comment" rows="4" required                                                
-                                                placeholder="Comment était le terrain ? L'éclairage ? Les vestiaires ?"                                            
-                                                   
+                                            <textarea name="comment" rows="4" required
+                                                placeholder="Comment était le terrain ? L'éclairage ? Les vestiaires ?"
                                                 class="w-full bg-white dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-700 rounded-xl focus:ring-2 focus:ring-primary p-4 text-sm outline-none resize-none"></textarea>
-
                                         </div>
 
                                         <div
@@ -421,11 +419,37 @@
                     <form action="{{ route('payment.process') ?? '#' }}" method="POST" id="spa-booking-form">
                         @csrf
                         <input type="hidden" name="stadium_id" value="{{ $stadium->id ?? 1 }}">
-                        <input type="hidden" name="reservation_date" value="{{ date('Y-m-d') }}">
                         <input type="hidden" name="reservation_time" id="selected-time" value="18:00">
-                        <input type="hidden" name="total_amount" value="{{ $stadium->price ?? 45 }}">
+                        <input type="hidden" name="total_amount" value="{{ $stadium->price + 3 ?? 45 }}">
 
                         <div id="step-1" class="transition-all duration-300 transform translate-x-0 opacity-100">
+                            @if (session('error'))
+                                <div
+                                    class="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-start gap-3 shadow-sm animate-pulse">
+                                    <span class="material-symbols-outlined icon-filled mt-0.5">error</span>
+                                    <p class="text-sm font-bold">{{ session('error') }}</p>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div
+                                    class="mb-6 bg-brand-green/10 border border-brand-green/20 text-brand-green px-4 py-3 rounded-xl flex items-start gap-3 shadow-sm">
+                                    <span class="material-symbols-outlined icon-filled mt-0.5">check_circle</span>
+                                    <p class="text-sm font-bold">{{ session('success') }}</p>
+                                </div>
+                            @endif
+
+                            @if ($errors->any())
+                                <div
+                                    class="mb-6 bg-orange-50 border border-orange-200 text-orange-600 px-4 py-3 rounded-xl flex items-start gap-3 shadow-sm">
+                                    <span class="material-symbols-outlined icon-filled mt-0.5">warning</span>
+                                    <ul class="text-sm font-bold list-disc pl-4">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <h2 class="text-xl font-bold mb-6">Réserver le terrain</h2>
 
                             <div class="space-y-6">
@@ -436,9 +460,11 @@
                                             class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">calendar_today</span>
                                         <input name="reservation_date" id="date-picker"
                                             class="w-full pl-10 pr-4 py-3 bg-slate-50 border-none ring-1 ring-slate-200 rounded-xl text-sm outline-none cursor-pointer focus:ring-2 focus:ring-primary"
-                                            type="date" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" />
+                                            type="date" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}"
+                                            required />
                                     </div>
                                 </div>
+
                                 <div class="space-y-3">
                                     <label class="text-xs font-black uppercase opacity-50">Heure</label>
                                     <div class="grid grid-cols-3 gap-2">
@@ -459,12 +485,12 @@
                                     </div>
                                     <div class="flex justify-between text-sm text-slate-500">
                                         <span>Frais de service</span>
-                                        <span class="font-medium text-slate-800">$0.00</span>
+                                        <span class="font-medium text-slate-800">$3.00</span>
                                     </div>
                                     <div class="pt-2 mt-2 flex justify-between items-center">
                                         <span class="font-bold">Total</span>
                                         <span
-                                            class="text-xl font-black text-primary">${{ $stadium->price ?? '45.00' }}</span>
+                                            class="text-xl font-black text-primary">${{ $total ?? $stadium->price + 3 }}</span>
                                     </div>
                                 </div>
 
@@ -500,7 +526,8 @@
                                     <p class="text-sm font-bold text-slate-800" id="summary-time">Aujourd'hui à 18:00
                                     </p>
                                 </div>
-                                <span class="text-xl font-black text-primary">${{ $stadium->price ?? '45.00' }}</span>
+                                <span
+                                    class="text-xl font-black text-primary">${{ $total ?? $stadium->price + 3 }}</span>
                             </div>
 
                             <div class="space-y-4">
@@ -550,7 +577,6 @@
                             </div>
                         </div>
                     </form>
-
                     <div
                         class="mt-6 rounded-2xl overflow-hidden border border-slate-200 h-48 relative shadow-inner z-0">
                         <div id="map-small" class="w-full h-full bg-slate-200 z-0"></div>
@@ -563,7 +589,6 @@
     <footer class="mt-20 border-t py-12 text-center opacity-50">
         <p class="text-[10px] font-bold tracking-widest uppercase">© 2026 KoraBooking. All rights reserved.</p>
     </footer>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -607,8 +632,8 @@
             const koraIcon = L.divIcon({
                 className: 'custom-leaflet-icon',
                 html: `<div style="background-color: #ec5b13; color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-                            <span class="material-symbols-outlined" style="font-size: 20px;">sports_soccer</span>
-                       </div>`,
+                            <span class="material-symbols-outlined" style="font-size: 20px;">sports_soccer</span>
+                       </div>`,
                 iconSize: [36, 36],
                 iconAnchor: [18, 18],
                 popupAnchor: [0, -18]
