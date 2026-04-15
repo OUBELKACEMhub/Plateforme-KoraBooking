@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\OfferController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -37,7 +38,19 @@ Route::middleware('guest')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::get('/weather', [WeatherController::class, 'getWeather']);
-Route::get('/check-match', [WeatherController::class, 'getMatchAdvice'])->name('weather.advice');
+
+//manager
+Route::middleware(['auth', 'manager'])->group(function () {
+    
+    Route::get('/manager/dashboard', [ManagerController::class, 'dashboard'])->name('manager.dashboard');
+    
+    // Les offres
+    Route::post('/stadiums/{stadium}/offers', [OfferController::class, 'storeAndAttachOffer'])->name('stadiums.offers.store');
+    Route::delete('/stadiums/{stadium}/offers/{offer}', [OfferController::class, 'removeOfferFromStadium'])->name('stadiums.offers.remove');
+
+});
+
+// Route::get('/weather', [WeatherController::class, 'getWeather']);
+// Route::get('/check-match', [WeatherController::class, 'getMatchAdvice'])->name('weather.advice');
 
 
