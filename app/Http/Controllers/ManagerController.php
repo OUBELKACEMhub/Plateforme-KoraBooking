@@ -80,6 +80,12 @@ class ManagerController extends Controller
     }
 }
 
+public function afficherMesTerians(){
+    $managerId = Auth::id();
+    $stadiums = Stadium::where('manager_id', $managerId)->get();
+    
+    return view('manager.stadiums', compact('stadiums'));
+}
 
 
 }
