@@ -10,6 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\ManagerController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -22,9 +23,13 @@ Route::middleware('guest')->group(function () {
     
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    
+    
 });
 
- Route::middleware('auth')->group(function () {
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+ Route::middleware(['auth', 'customer'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/stadiums/{id}', [DashboardController::class, 'show'])->name('stadiums.show');
@@ -33,24 +38,28 @@ Route::middleware('guest')->group(function () {
     Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
     Route::get('/reservation-success', function() {
     return view('stadiums.show'); 
-})->name('reservation');
+})->name('reservation');    
     Route::get('/mes-matchs', [ReservationController::class, 'index'])->name('reservations.index');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    
 });
 
 
 //manager
 Route::middleware(['auth', 'manager'])->group(function () {
     
-    Route::get('/manager/dashboard', [ManagerController::class, 'dashboard'])->name('manager.dashboard');
+    Route::get('/manager/dashboard', [ManagerController::class, 'index'])->name('manager.dashboard');
     
     // Les offres
     Route::post('/stadiums/{stadium}/offers', [OfferController::class, 'storeAndAttachOffer'])->name('stadiums.offers.store');
     Route::delete('/stadiums/{stadium}/offers/{offer}', [OfferController::class, 'removeOfferFromStadium'])->name('stadiums.offers.remove');
+    Route::patch('/manager/reservations/{id}/status', [ManagerController::class, 'updateReservationStatus'])
+    ->name('manager.reservations.updateStatus');
+    Route::get('/manager/mes-terrains', [ManagerController::class, 'afficherMesTerians'])->name('manager.stadiums');
+    Route::get('/manager/reviews', [ManagerController::class, 'getManagerReviews'])->name('manager.reviews');
 
 });
 
-// Route::get('/weather', [WeatherController::class, 'getWeather']);
-// Route::get('/check-match', [WeatherController::class, 'getMatchAdvice'])->name('weather.advice');
+
 
 
