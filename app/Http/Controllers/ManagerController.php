@@ -87,5 +87,18 @@ public function afficherMesTerians(){
     return view('manager.stadiums', compact('stadiums'));
 }
 
+public function getManagerReviews()
+{
+    $managerId = Auth::id();
+
+    $reviews = Review::with(['user', 'stadium']) 
+        ->whereHas('stadium', function ($query) use ($managerId) {
+            $query->where('manager_id', $managerId);
+        })
+        ->orderBy('created_at', 'desc') 
+        ->paginate(10); 
+
+    return view('manager.reviews', compact('reviews'));
+}
 
 }
