@@ -62,4 +62,24 @@ class ManagerController extends Controller
     }
 
 
+    public function updateReservationStatus(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|in:confirmed,canceled',
+    ]);
+
+    $reservation = Reservation::findOrFail($id);
+
+    $reservation->status = $request->status;
+    $reservation->save();
+
+        if ($reservation->status === 'confirmed') {
+        return redirect()->route('manager.dashboard')->with('success', 'La réservation a été acceptée avec succès !');
+    } else {
+    return redirect()->route('manager.dashboard')->with('error', 'La réservation a été refusée.');
+    }
+}
+
+
+
 }
