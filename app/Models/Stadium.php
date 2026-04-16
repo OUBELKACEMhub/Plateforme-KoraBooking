@@ -65,7 +65,6 @@ class Stadium extends Model
     {
         $originalPrice = $this->price;
 
-        // Kanjbdo a7ssan offre khddama l-youma (li fiha akbar pourcentage)
         $activeOffer = $this->offers()
                             ->whereDate('start_date', '<=', now())
                             ->whereDate('end_date', '>=', now())
@@ -77,6 +76,6 @@ class Stadium extends Model
             return $originalPrice - $discountAmount;
         }
 
-        return $originalPrice; // Ila makayn ta offre, kayrje3 l-prix 3adi
+        return $originalPrice; 
     }
 }
