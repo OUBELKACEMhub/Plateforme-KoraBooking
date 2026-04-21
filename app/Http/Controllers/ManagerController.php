@@ -101,4 +101,16 @@ public function getManagerReviews()
     return view('manager.reviews', compact('reviews'));
 }
 
+public function getManagerOffers()
+{
+    $managerId = Auth::id();
+
+    $offers = Offer::with(['creator', 'stadiums'])
+        ->where('creator_id', $managerId) 
+        ->latest()                   
+        ->paginate(10);              
+
+    return view('manager.offers', compact('offers'));
+}
+
 }
