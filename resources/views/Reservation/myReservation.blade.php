@@ -1,147 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Mes Réservations | KoraBooking</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
-
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "on-surface": "#191c1e",
-                        "tertiary-fixed-dim": "#4edea3",
-                        "surface-container-high": "#e7e8ea",
-                        "on-tertiary": "#ffffff",
-                        "secondary-fixed-dim": "#ffb690",
-                        "on-tertiary-fixed-variant": "#005236",
-                        "outline-variant": "#bfc9c3",
-                        "on-tertiary-fixed": "#002113",
-                        "tertiary": "#003623",
-                        "surface-tint": "#2b6954",
-                        "secondary-container": "#fd761a",
-                        "on-secondary-fixed-variant": "#783200",
-                        "primary-fixed": "#b0f0d6",
-                        "on-secondary-container": "#5c2400",
-                        "on-primary-fixed-variant": "#0b513d",
-                        "primary-container": "#064e3b",
-                        "on-primary": "#ffffff",
-                        "error-container": "#ffdad6",
-                        "on-error": "#ffffff",
-                        "surface-variant": "#e1e2e4",
-                        "surface": "#f8f9fb",
-                        "secondary": "#9d4300",
-                        "on-background": "#191c1e",
-                        "surface-container-low": "#f3f4f6",
-                        "background": "#f8f9fb",
-                        "tertiary-fixed": "#6ffbbe",
-                        "surface-container-highest": "#e1e2e4",
-                        "on-primary-container": "#80bea6",
-                        "error": "#ba1a1a",
-                        "primary-fixed-dim": "#95d3ba",
-                        "inverse-on-surface": "#f0f1f3",
-                        "inverse-primary": "#95d3ba",
-                        "surface-dim": "#d9dadc",
-                        "surface-container": "#edeef0",
-                        "on-error-container": "#93000a",
-                        "outline": "#707974",
-                        "on-secondary": "#ffffff",
-                        "on-surface-variant": "#404944",
-                        "on-primary-fixed": "#002117",
-                        "secondary-fixed": "#ffdbca",
-                        "on-tertiary-container": "#31c98f",
-                        "inverse-surface": "#2e3132",
-                        "surface-bright": "#f8f9fb",
-                        "tertiary-container": "#004f34",
-                        "on-secondary-fixed": "#341100",
-                        "surface-container-lowest": "#ffffff",
-                        "primary": "#003527",
-                        "brand-green": "#16a34a" // Zedt had loun bach ymatche m3a tsawra
-                    },
-                    fontFamily: {
-                        "headline": ["Manrope"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                },
-            },
-        }
-    </script>
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-    </style>
-</head>
-
-<body class="bg-surface font-body text-on-surface antialiased">
-
-    <header class="bg-white border-b border-slate-200 px-4 md:px-20 py-4 shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-
-            <a href="{{ route('dashboard') ?? '/' }}" class="flex items-center gap-2 cursor-pointer">
-                <span class="material-symbols-outlined text-brand-green text-3xl">sports_soccer</span>
-                <h2 class="text-xl font-extrabold tracking-tight text-slate-900 uppercase">Kora<span
-                        class="text-brand-green">Booking</span></h2>
-            </a>
-
-            <nav class="hidden md:flex items-center gap-8">
-                <a class="text-sm font-bold text-slate-600 hover:text-brand-green transition-colors"
-                    href="{{ route('dashboard') ?? '#' }}">Trouver un terrain</a>
-                <a class="text-sm font-bold text-slate-600 hover:text-brand-green transition-colors"
-                    href="{{ route('reservations.index') ?? '#' }}">Mes Matchs</a>
-                <a class="text-sm font-bold text-slate-600 hover:text-brand-green transition-colors"
-                    href="#">Aide</a>
-            </nav>
-
-            <div class="flex items-center gap-6">
-                @auth
-                    <div class="flex items-center gap-3">
-                        <div class="hidden sm:flex flex-col text-right">
-                            <span class="text-sm font-bold text-slate-900">{{ auth()->user()->name }}</span>
-                            <span
-                                class="text-[10px] text-slate-500 uppercase tracking-widest font-black">{{ auth()->user()->role ?? 'CUSTOMER' }}</span>
-                        </div>
-                        <div
-                            class="w-10 h-10 rounded-full border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center shadow-sm">
-                            @if (auth()->user()->profile_image)
-                                <img alt="Profil" class="w-full h-full object-cover"
-                                    src="{{ asset('storage/' . auth()->user()->profile_image) }}" />
-                            @else
-                                <span
-                                    class="font-bold text-slate-600 uppercase">{{ substr(auth()->user()->name, 0, 1) }}</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="border-l border-slate-200 pl-6">
-                        <form action="{{ route('logout') }}" method="POST" class="m-0">
-                            @csrf
-                            <button type="submit"
-                                class="text-sm font-bold text-slate-600 hover:text-red-600 transition-colors">
-                                Déconnexion
-                            </button>
-                        </form>
-                    </div>
-                @endauth
-            </div>
-        </div>
-    </header>
+<x-layout>
 
     <main class="min-h-screen">
         <section class="relative h-[307px] bg-primary-container overflow-hidden flex items-end px-4 md:px-12 pb-12">
@@ -160,6 +17,19 @@
 
         <section class="max-w-7xl mx-auto px-4 md:px-12 py-16">
             <div class="flex flex-col gap-12">
+                @if (session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                        role="alert">
+                        <span class="block sm:inline font-bold">{{ session('success') }}</span>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert">
+                        <span class="block sm:inline font-bold">{{ session('error') }}</span>
+                    </div>
+                @endif
 
                 <div class="flex flex-col gap-6">
                     <div class="flex items-center justify-between border-b border-outline-variant/20 pb-4">
@@ -170,188 +40,270 @@
                         </span>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
                         {{-- Boucle 3la les réservations jayin --}}
                         @forelse ($upcomingBookings as $booking)
+                            @php
+                                $statusMap = [
+                                    'confirmed' => ['bg' => 'bg-emerald-500', 'text' => 'text-white'],
+                                    'confirmé' => ['bg' => 'bg-emerald-500', 'text' => 'text-white'],
+                                    'pending' => ['bg' => 'bg-amber-400', 'text' => 'text-amber-900'],
+                                    'en attente' => ['bg' => 'bg-amber-400', 'text' => 'text-amber-900'],
+                                    'cancelled' => ['bg' => 'bg-red-500', 'text' => 'text-white'],
+                                    'annulé' => ['bg' => 'bg-red-500', 'text' => 'text-white'],
+                                ];
+                                $badge = $statusMap[strtolower($booking->status)] ?? [
+                                    'bg' => 'bg-zinc-500',
+                                    'text' => 'text-white',
+                                ];
+                            @endphp
+
                             <div
-                                class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-outline-variant/10 overflow-hidden">
-                                <div class="h-40 overflow-hidden relative">
-                                    <img alt="Terrain"
-                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                        src="{{ $booking->stadium->image ? asset('storage/' . $booking->stadium->image) : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800' }}"
-                                        onerror="this.src='https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'" />
-                                    <div
-                                        class="absolute top-4 right-4 bg-secondary-container text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                                        Confirmé</div>
+                                class="group relative bg-white rounded-2xl overflow-hidden border border-zinc-100 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-100 transition-all duration-300">
+
+                                {{-- Top color bar --}}
+                                <div class="h-1 w-full bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-600">
                                 </div>
-                                <div class="p-6">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div>
-                                            <h3 class="font-headline font-bold text-lg text-primary">
-                                                {{ $booking->stadium->name }}</h3>
-                                            <p
-                                                class="font-label text-xs text-on-surface-variant flex items-center gap-1 mt-1">
-                                                <span class="material-symbols-outlined text-sm">location_on</span>
-                                                {{ $booking->stadium->city ?? 'Ville' }}
-                                            </p>
-                                        </div>
-                                        <span
-                                            class="font-headline font-extrabold text-xl text-primary">{{ $booking->final_price }}
-                                            DH</span>
+
+                                {{-- Image --}}
+                                <div class="relative h-44 overflow-hidden">
+                                    @php
+                                        $rawImage = $booking->stadium->image;
+                                        $cleanPath = $rawImage
+                                            ? str_replace(['public/', 'storage/'], '', $rawImage)
+                                            : null;
+                                    @endphp
+
+                                    <img src="{{ $cleanPath ? asset('storage/' . $cleanPath) : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800' }}"
+                                        alt="{{ $booking->stadium?->name ?? 'Terrain' }}"
+                                        onerror="this.src='https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent">
                                     </div>
-                                    <div class="flex flex-col gap-3 mb-6 bg-surface-container-low p-4 rounded-lg">
+
+                                    {{-- Status badge --}}
+                                    <span
+                                        class="absolute top-3 right-3 {{ $badge['bg'] }} {{ $badge['text'] }} text-[10px] font-black tracking-widest uppercase px-3 py-1 rounded-full">
+                                        {{ $booking->status }}
+                                    </span>
+
+                                    {{-- Price --}}
+                                    <span
+                                        class="absolute bottom-3 left-4 text-white font-black text-2xl tracking-tight drop-shadow-md">
+                                        {{ number_format($booking->final_price, 0) }}
+                                        <span class="text-sm font-semibold opacity-80">DH</span>
+                                    </span>
+                                </div>
+
+
+                                <div class="p-5">
+
+
+                                    <div class="mb-4">
+                                        <h3 class="font-black text-base text-zinc-900 truncate leading-tight">
+                                            {{ $booking->stadium->name }}
+                                        </h3>
+                                        <p class="flex items-center gap-1.5 text-xs text-zinc-400 mt-1">
+                                            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                            {{ $booking->stadium->city ?? 'Ville inconnue' }}
+                                        </p>
+                                    </div>
+
+
+                                    <div
+                                        class="flex flex-col gap-2 mb-5 bg-zinc-50 rounded-xl px-4 py-3 border border-zinc-100">
                                         <div class="flex items-center gap-3">
-                                            <span
-                                                class="material-symbols-outlined text-on-primary-container">calendar_today</span>
-                                            <span
-                                                class="font-body text-sm font-medium">{{ \Carbon\Carbon::parse($booking->date)->translatedFormat('l d F Y') }}</span>
+                                            <div
+                                                class="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                                                <svg class="w-3.5 h-3.5 text-emerald-600" viewBox="0 0 16 16"
+                                                    fill="none">
+                                                    <rect x="2" y="3" width="12" height="11" rx="2"
+                                                        stroke="currentColor" stroke-width="1.4" />
+                                                    <path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor"
+                                                        stroke-width="1.4" stroke-linecap="round" />
+                                                </svg>
+                                            </div>
+                                            <span class="text-xs font-semibold text-zinc-700">
+                                                {{ \Carbon\Carbon::parse($booking->start_time)->translatedFormat('l d F Y') }}
+                                            </span>
                                         </div>
                                         <div class="flex items-center gap-3">
-                                            <span
-                                                class="material-symbols-outlined text-on-primary-container">schedule</span>
-                                            <span
-                                                class="font-body text-sm font-medium">{{ \Carbon\Carbon::parse($booking->start_time)->format('H:i') }}
-                                                — {{ \Carbon\Carbon::parse($booking->end_time)->format('H:i') }}</span>
+                                            <div
+                                                class="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                                                <svg class="w-3.5 h-3.5 text-emerald-600" viewBox="0 0 16 16"
+                                                    fill="none">
+                                                    <circle cx="8" cy="8" r="6" stroke="currentColor"
+                                                        stroke-width="1.4" />
+                                                    <path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4"
+                                                        stroke-linecap="round" />
+                                                </svg>
+                                            </div>
+                                            <span class="text-xs font-semibold text-zinc-700">
+                                                {{ \Carbon\Carbon::parse($booking->start_time)->format('H:i') }}
+                                                &mdash;
+                                                {{ \Carbon\Carbon::parse($booking->end_time)->format('H:i') }}
+                                            </span>
                                         </div>
                                     </div>
-                                    <a href="#"
-                                        class="w-full py-3 rounded-lg font-bold text-sm bg-primary-container text-white hover:bg-primary transition-colors flex items-center justify-center gap-2">
-                                        Voir le ticket <span
-                                            class="material-symbols-outlined text-sm">arrow_forward</span>
-                                    </a>
+
+
+                                    <form action="{{ route('reservations.cancel', $booking->id) }}" method="POST"
+                                        onsubmit="return confirm('Voulez-vous vraiment annuler ? Le montant sera remboursé dans votre Portefeuille KoraBooking.');">
+                                        @csrf
+                                        <button type="submit"
+                                            class="relative w-full overflow-hidden flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-red-200 bg-white hover:bg-red-600 text-red-500 hover:text-white hover:border-red-600 hover:shadow-lg hover:shadow-red-100 active:scale-95 transition-all duration-200 group/btn">
+
+                                            <div class="flex items-center gap-2.5">
+
+                                                <span class="text-xs font-bold tracking-wide">Annuler la
+                                                    réservation</span>
+                                            </div>
+                                            {{-- Right: arrow --}}
+                                            <svg class="w-3.5 h-3.5 opacity-40 group-hover/btn:opacity-100 group-hover/btn:translate-x-0.5 transition-all duration-200"
+                                                viewBox="0 0 16 16" fill="none">
+                                                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
+
                         @empty
-                            <div class="col-span-full py-8 text-center text-on-surface-variant">
-                                Vous n'avez aucune réservation à venir.
+                            <div class="col-span-full py-16 flex flex-col items-center gap-3 text-zinc-400">
+                                <div class="w-14 h-14 rounded-full bg-zinc-100 flex items-center justify-center">
+                                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+                                        <rect x="3" y="4" width="18" height="17" rx="3"
+                                            stroke="currentColor" stroke-width="1.5" />
+                                        <path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium">Vous n'avez aucune réservation à venir.</p>
                             </div>
                         @endforelse
 
+                        {{-- Add new booking --}}
                         <a href="{{ route('dashboard') ?? '#' }}"
-                            class="border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center p-8 hover:bg-surface-container-low transition-all cursor-pointer group min-h-[350px]">
+                            class="group border-2 border-dashed border-zinc-200 hover:border-emerald-400 rounded-2xl flex flex-col items-center justify-center p-8 min-h-[300px] transition-all duration-300 hover:bg-emerald-50/40 cursor-pointer">
                             <div
-                                class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-primary-container text-3xl">add</span>
+                                class="w-14 h-14 rounded-2xl bg-zinc-100 group-hover:bg-emerald-100 flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                                <svg class="w-6 h-6 text-zinc-400 group-hover:text-emerald-600 transition-colors duration-300"
+                                    viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" />
+                                </svg>
                             </div>
-                            <h3 class="font-headline font-bold text-primary">Nouveau Match</h3>
-                            <p class="text-sm text-on-surface-variant text-center mt-2">Trouvez un terrain et réservez
-                                votre prochaine session.</p>
+                            <h3
+                                class="font-black text-sm tracking-widest uppercase text-zinc-400 group-hover:text-emerald-700 transition-colors duration-300">
+                                Nouveau Match
+                            </h3>
+                            <p class="text-xs text-zinc-400 text-center mt-2 max-w-[130px] leading-relaxed">
+                                Trouvez un terrain et réservez votre prochaine session.
+                            </p>
                         </a>
-                    </div>
-                </div>
 
-                <div class="flex flex-col gap-6 mt-8">
-                    <div class="flex items-center justify-between border-b border-outline-variant/20 pb-4">
-                        <h2 class="font-headline font-bold text-2xl text-primary">Historique</h2>
                     </div>
 
-                    <div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm overflow-x-auto">
-                        <table class="w-full text-left whitespace-nowrap">
-                            <thead class="bg-surface-container-low border-b border-outline-variant/10">
-                                <tr>
-                                    <th
-                                        class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase">
-                                        Terrain</th>
-                                    <th
-                                        class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase">
-                                        Date & Heure</th>
-                                    <th
-                                        class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase">
-                                        Prix</th>
-                                    <th
-                                        class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase">
-                                        Statut</th>
-                                    <th
-                                        class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase text-right">
-                                        Reçu</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-outline-variant/5">
+                    <div class="flex flex-col gap-6 mt-8">
+                        <div class="flex items-center justify-between border-b border-outline-variant/20 pb-4">
+                            <h2 class="font-headline font-bold text-2xl text-primary">Historique</h2>
+                        </div>
 
-                                {{-- Boucle 3la l'historique --}}
-                                @forelse ($historyBookings as $history)
-                                    <tr class="hover:bg-surface transition-colors">
-                                        <td class="px-6 py-6">
-                                            <div class="flex items-center gap-4">
-                                                <div
-                                                    class="w-10 h-10 rounded-lg {{ $history->status === 'cancelled' ? 'bg-error-container/30' : 'bg-primary-fixed-dim' }} flex items-center justify-center">
-                                                    <span
-                                                        class="material-symbols-outlined {{ $history->status === 'cancelled' ? 'text-error' : 'text-on-primary-fixed' }}">
-                                                        {{ $history->status === 'cancelled' ? 'close' : 'sports_soccer' }}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <div class="font-bold text-primary">{{ $history->stadium->name }}
-                                                    </div>
-                                                    <div class="text-xs text-on-surface-variant">Réf:
-                                                        {{ $history->id }}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-6">
-                                            <div class="text-sm font-medium">
-                                                {{ \Carbon\Carbon::parse($history->date)->format('d/m/Y') }}</div>
-                                            <div class="text-xs text-on-surface-variant">
-                                                {{ \Carbon\Carbon::parse($history->start_time)->format('H:i') }} —
-                                                {{ \Carbon\Carbon::parse($history->end_time)->format('H:i') }}</div>
-                                        </td>
-                                        <td class="px-6 py-6 font-headline font-bold text-primary">
-                                            {{ $history->final_price }} DH</td>
-                                        <td class="px-6 py-6">
-                                            @if ($history->status === 'confirmed')
-                                                <span
-                                                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-[10px] font-bold tracking-wider uppercase">Terminé</span>
-                                            @elseif($history->status === 'cancelled')
-                                                <span
-                                                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error-container/40 text-on-error-container text-[10px] font-bold tracking-wider uppercase">Annulé</span>
-                                            @endif
-                                        </td>
-                                        <td class="px-6 py-6 text-right">
-                                            @if ($history->status !== 'cancelled')
-                                                <button
-                                                    class="text-on-primary-container hover:text-primary transition-colors">
-                                                    <span class="material-symbols-outlined">download</span>
-                                                </button>
-                                            @else
-                                                <button class="text-outline/40 cursor-not-allowed" disabled>
-                                                    <span class="material-symbols-outlined">info</span>
-                                                </button>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @empty
+                        <div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm overflow-x-auto">
+                            <table class="w-full text-left whitespace-nowrap">
+                                <thead class="bg-surface-container-low border-b border-outline-variant/10">
                                     <tr>
-                                        <td colspan="5" class="px-6 py-8 text-center text-on-surface-variant">
-                                            Aucun historique de réservation.
-                                        </td>
+                                        <th
+                                            class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase">
+                                            Terrain</th>
+                                        <th
+                                            class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase">
+                                            Date & Heure</th>
+                                        <th
+                                            class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase">
+                                            Prix</th>
+                                        <th
+                                            class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase">
+                                            Statut</th>
+                                        <th
+                                            class="px-6 py-5 font-label text-xs tracking-widest text-on-surface-variant uppercase text-right">
+                                            Reçu</th>
                                     </tr>
-                                @endforelse
+                                </thead>
+                                <tbody class="divide-y divide-outline-variant/5">
 
-                            </tbody>
-                        </table>
+                                    {{-- Boucle 3la l'historique --}}
+                                    @forelse ($historyBookings as $history)
+                                        <tr class="hover:bg-surface transition-colors">
+                                            <td class="px-6 py-6">
+                                                <div class="flex items-center gap-4">
+                                                    <div
+                                                        class="w-10 h-10 rounded-lg {{ $history->status === 'cancelled' ? 'bg-error-container/30' : 'bg-primary-fixed-dim' }} flex items-center justify-center">
+                                                        <span
+                                                            class="material-symbols-outlined {{ $history->status === 'cancelled' ? 'text-error' : 'text-on-primary-fixed' }}">
+                                                            {{ $history->status === 'cancelled' ? 'close' : 'sports_soccer' }}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <div class="font-bold text-primary">
+                                                            {{ $history->stadium->name }}
+                                                        </div>
+                                                        <div class="text-xs text-on-surface-variant">Réf:
+                                                            {{ $history->id }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-6">
+                                                <div class="text-sm font-medium">
+                                                    {{ \Carbon\Carbon::parse($history->start_time)->format('d/m/Y') }}
+                                                </div>
+                                                <div class="text-xs text-on-surface-variant">
+                                                    {{ \Carbon\Carbon::parse($history->start_time)->format('H:i') }} —
+                                                    {{ \Carbon\Carbon::parse($history->end_time)->format('H:i') }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-6 font-headline font-bold text-primary">
+                                                {{ $history->final_price }} DH</td>
+                                            <td class="px-6 py-6">
+                                                @if ($history->status === 'confirmed')
+                                                    <span
+                                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-[10px] font-bold tracking-wider uppercase">Terminé</span>
+                                                @elseif($history->status === 'cancelled')
+                                                    <span
+                                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error-container/40 text-on-error-container text-[10px] font-bold tracking-wider uppercase">Annulé</span>
+                                                @endif
+                                            </td>
+                                            <td class="px-6 py-6 text-right">
+                                                @if ($history->status !== 'cancelled')
+                                                    <button
+                                                        class="text-on-primary-container hover:text-primary transition-colors">
+                                                        <span class="material-symbols-outlined">download</span>
+                                                    </button>
+                                                @else
+                                                    <button class="text-outline/40 cursor-not-allowed" disabled>
+                                                        <span class="material-symbols-outlined">info</span>
+                                                    </button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="px-6 py-8 text-center text-on-surface-variant">
+                                                Aucun historique de réservation.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
         </section>
     </main>
 
-    <footer class="bg-primary-container full-width border-t border-primary-container/50">
-        <div
-            class="flex flex-col md:flex-row justify-between items-center px-4 md:px-12 py-8 w-full max-w-7xl mx-auto">
-            <p class="font-inter text-xs tracking-[0.05em] uppercase text-white/50">© 2026 KoraBooking. Tous droits
-                réservés.</p>
-            <div class="flex gap-8 mt-6 md:mt-0">
-                <a class="font-inter text-xs tracking-[0.05em] uppercase text-white/40 hover:text-white transition-colors"
-                    href="#">Confidentialité</a>
-                <a class="font-inter text-xs tracking-[0.05em] uppercase text-white/40 hover:text-white transition-colors"
-                    href="#">Conditions</a>
-                <a class="font-inter text-xs tracking-[0.05em] uppercase text-white/40 hover:text-white transition-colors"
-                    href="#">Support</a>
-            </div>
-        </div>
-    </footer>
-
-</body>
-
-</html>
+</x-layout>
