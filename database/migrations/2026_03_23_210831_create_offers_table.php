@@ -15,7 +15,7 @@ return new class extends Migration
     $table->id();
     $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
     $table->double('discount_percentage');
-    $table->enum('type', ['flash', 'seasonal']); 
+    $table->enum('type', ['flash', 'seasonal', 'promo']); 
     $table->dateTime('start_date');
     $table->dateTime('end_date');
     $table->timestamps();

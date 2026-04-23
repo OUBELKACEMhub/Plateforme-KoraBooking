@@ -12,6 +12,7 @@ class Stadium extends Model
     
  protected $fillable = [
         'name',
+        'status',
         'city',
         'address',
         'price',
@@ -52,6 +53,11 @@ class Stadium extends Model
             return $this->belongsToMany(Offer::class, 'offer_stadium');
         }
 
+
+        public function isUnderMaintenance(): bool
+            {
+            return $this->status === 'maintenance';
+            }
 
         public function getHasActiveOfferAttribute()
     {

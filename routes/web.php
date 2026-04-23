@@ -40,8 +40,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
     return view('stadiums.show'); 
 })->name('reservation');    
     Route::get('/mes-matchs', [ReservationController::class, 'index'])->name('reservations.index');
-    
-    
+    Route::post('/reservations/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
 });
 
 
@@ -57,6 +56,9 @@ Route::middleware(['auth', 'manager'])->group(function () {
     ->name('manager.reservations.updateStatus');
     Route::get('/manager/mes-terrains', [ManagerController::class, 'afficherMesTerians'])->name('manager.stadiums');
     Route::get('/manager/reviews', [ManagerController::class, 'getManagerReviews'])->name('manager.reviews');
+    Route::post('/manager/offers', [OfferController::class, 'storeAndAttachOffer'])->name('manager.offers.store');
+
+    Route::get('/manager/offers', [ManagerController::class, 'getManagerOffers'])->name('manager.offers');
 
 });
 

@@ -50,4 +50,6 @@
     @stack('scripts')
 </body>
 
+
+
 </html>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stadium;
+use App\Models\Offer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -19,8 +21,16 @@ class DashboardController extends Controller
             })
             ->get(); 
 
-        $weatherCity = $request->city ? $request->city : 'Safi';
+        $today = Carbon::today();
+        
+        $offers = Offer::with('stadiums')
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
+            ->orderBy('created_at', 'desc') 
+            ->take(8) 
+            ->get();
 
+        $weatherCity = $request->city ? $request->city : 'Safi';
         $weatherKey = config('services.openweather.key');
         $weatherResp = Http::get("https://api.openweathermap.org/data/2.5/weather", [
             'q' => $weatherCity,
@@ -33,8 +43,10 @@ class DashboardController extends Controller
         
         $ai = $this->getAiCoachAdvice($weather, $weatherCity);
 
-        return view('dashboard', compact('stadiums', 'weather', 'ai'));
+        
+        return view('dashboard', compact('stadiums', 'weather', 'ai', 'offers'));
     }
+
 
     public function show($id)
     {
@@ -50,10 +62,8 @@ class DashboardController extends Controller
             'lang' => 'fr'
         ]);
         
-        $weather = $weatherResp->successful() ? $weatherResp->json() : null;
-        
+        $weather = $weatherResp->successful() ? $weatherResp->json() : null;       
         $ai = $this->getAiCoachAdvice($weather, $city); 
-
         return view('stadiums.show', compact('stadium', 'weather', 'ai'));
     }
 

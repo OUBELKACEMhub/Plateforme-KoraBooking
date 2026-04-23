@@ -21,7 +21,7 @@ class AuthController extends Controller
         'name' => ['required', 'string', 'max:255'],
         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
         'password' => ['required', 'confirmed', Password::defaults()],
-        'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'], // nullable hit machi darouriya
+        'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'], 
     ]);
 
     $imagePath = null; 
@@ -36,6 +36,7 @@ class AuthController extends Controller
         'password' => Hash::make($data['password']),
         'profile_image' => $imagePath, 
         'role' => 'customer', 
+        'wallet_balance' => 0.00,
     ]);
 
     Auth::login($user);

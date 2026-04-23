@@ -1,7 +1,6 @@
 <x-layout>
     <x-slot:title>Trouvez votre terrain - KoraBooking</x-slot>
 
-    {{-- 1. Styles spécifiques à la page (Leaflet & Animations) --}}
     @push('styles')
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <style>
@@ -25,24 +24,24 @@
                 }
             }
 
-            /* Bach n7iydo l-scrollbar l-khayba f l-carousel d les offres */
             .hide-scroll::-webkit-scrollbar {
                 display: none;
             }
 
             .hide-scroll {
                 -ms-overflow-style: none;
-                /* IE and Edge */
                 scrollbar-width: none;
-                /* Firefox */
             }
         </style>
     @endpush
 
     <section class="relative bg-primary py-16 md:py-24 overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0 opacity-55">
             <div class="absolute top-0 left-0 w-full h-full"
-                style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;">
+                style="background-image: url('https://images.unsplash.com/photo-1721441904917-1afc7f0de133?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;">
             </div>
         </div>
         <div class="relative max-w-7xl mx-auto px-4 text-center text-white">
@@ -213,10 +212,17 @@
                             </div>
 
                             @if ($stadium)
-                                <a href="{{ route('stadiums.show', $stadium->id) }}"
-                                    class="w-10 h-10 rounded-full {{ $style['btn'] }} flex items-center justify-center transition-colors relative z-20">
-                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                                </a>
+                                @if ($stadium->status === 'maintenance')
+                                    <div title="Terrain en maintenance"
+                                        class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 flex items-center justify-center relative z-20 cursor-not-allowed">
+                                        <span class="material-symbols-outlined text-sm">block</span>
+                                    </div>
+                                @else
+                                    <a href="{{ route('stadiums.show', $stadium->id) }}"
+                                        class="w-10 h-10 rounded-full {{ $style['btn'] }} flex items-center justify-center transition-colors relative z-20 hover:scale-105">
+                                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                    </a>
+                                @endif
                             @endif
                         </div>
                     </div>
@@ -245,13 +251,25 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="stadiums-grid">
                     @forelse($stadiums ?? [] as $stadium)
                         <div
-                            class="stadium-card {{ $loop->iteration > 4 ? 'hidden' : '' }} bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 group hover:shadow-md transition-shadow">
+                            class="stadium-card {{ $loop->iteration > 4 ? 'hidden' : '' }} bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 group transition-all duration-300 {{ $stadium->status === 'maintenance' ? 'opacity-80 grayscale-[40%]' : 'hover:shadow-md' }}">
+
                             <div class="relative h-48">
                                 <img src="{{ $stadium->image ?? 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800' }}"
                                     class="w-full h-full object-cover">
 
+                                @if ($stadium->isUnderMaintenance())
+                                    <div
+                                        class="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-center z-10">
+                                        <div
+                                            class="bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg">
+                                            <span class="material-symbols-outlined text-[18px]">build</span>
+                                            En Maintenance
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div
-                                    class="absolute top-3 right-3 bg-white text-slate-900 px-2 py-1 rounded flex items-center gap-1 text-xs font-bold shadow-sm">
+                                    class="absolute top-3 right-3 bg-white text-slate-900 px-2 py-1 rounded flex items-center gap-1 text-xs font-bold shadow-sm z-20">
                                     <span class="material-symbols-outlined text-yellow-500 text-[14px]"
                                         style="font-variation-settings: 'FILL' 1;">star</span>
                                     {{ $stadium->rate ?? 4.8 }}
@@ -260,7 +278,7 @@
                                     </span>
                                 </div>
 
-                                <div class="absolute bottom-3 left-3 flex gap-2">
+                                <div class="absolute bottom-3 left-3 flex gap-2 z-20">
                                     @if ($stadium->has_active_offer ?? false)
                                         <div
                                             class="bg-slate-900/80 backdrop-blur text-white px-2 py-1 rounded text-sm font-bold line-through opacity-80">
@@ -276,29 +294,43 @@
                                     @endif
                                 </div>
                             </div>
+
                             <div class="p-5">
                                 <h4
                                     class="text-lg font-bold text-slate-900 mb-1 group-hover:text-primary transition-colors">
-                                    {{ $stadium->name }}</h4>
+                                    {{ $stadium->name }}
+                                </h4>
                                 <div class="flex items-center gap-1 text-slate-500 text-sm mb-4">
                                     <span class="material-symbols-outlined text-[16px]">location_on</span>
                                     <span>{{ $stadium->address ?? 'Quartier' }}, {{ $stadium->city }}</span>
                                 </div>
+
                                 <div class="flex items-center justify-between border-t border-slate-100 pt-4">
                                     <div class="flex gap-3">
                                         @if ($stadium->has_active_offer ?? false)
-                                            <span class="text-xs font-bold text-primary flex items-center gap-1"><span
-                                                    class="material-symbols-outlined text-[14px]">local_offer</span>
-                                                Promo</span>
+                                            <span class="text-xs font-bold text-primary flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[14px]">local_offer</span>
+                                                Promo
+                                            </span>
                                         @endif
-                                        <span class="text-xs font-medium text-slate-500 flex items-center gap-1"><span
-                                                class="material-symbols-outlined text-[14px]">calendar_month</span>
-                                            Dispo.</span>
+                                        <span class="text-xs font-medium text-slate-500 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[14px]">calendar_month</span>
+                                            Dispo.
+                                        </span>
                                     </div>
-                                    <a href="{{ route('stadiums.show', $stadium->id) }}"
-                                        class="text-green-600 font-bold text-sm flex items-center gap-1 hover:translate-x-1 transition-transform">
-                                        Réserver <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                                    </a>
+
+                                    @if ($stadium->isUnderMaintenance())
+                                        <span
+                                            class="text-slate-400 font-bold text-sm flex items-center gap-1 cursor-not-allowed">
+                                            Indisponible <span class="material-symbols-outlined text-sm">block</span>
+                                        </span>
+                                    @else
+                                        <a href="{{ route('stadiums.show', $stadium->id) }}"
+                                            class="text-green-600 font-bold text-sm flex items-center gap-1 hover:translate-x-1 transition-transform">
+                                            Réserver <span
+                                                class="material-symbols-outlined text-sm">arrow_forward</span>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -316,6 +348,8 @@
                         </button>
                     </div>
                 @endif
+
+
             </div>
 
             <div class="lg:w-[400px]">

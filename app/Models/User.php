@@ -28,7 +28,7 @@ class User extends Authenticatable
     'email',
     'password',
     'role',
-    'loyalty_points',
+    'wallet_balance',
     'referral_code',
     'profile_image',
 ];

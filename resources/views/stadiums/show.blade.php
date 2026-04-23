@@ -72,62 +72,7 @@
 
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
 
-    <header class="bg-white border-b border-slate-200 px-4 md:px-20 py-4 shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-
-            <a href="{{ route('dashboard') ?? '/' }}" class="flex items-center gap-2 cursor-pointer">
-                <span class="material-symbols-outlined text-brand-green text-3xl">sports_soccer</span>
-                <h2 class="text-xl font-extrabold tracking-tight text-slate-900 uppercase">Kora<span
-                        class="text-brand-green">Booking</span></h2>
-            </a>
-
-            <nav class="hidden md:flex items-center gap-8">
-                <a class="text-sm font-bold text-slate-600 hover:text-brand-green transition-colors"
-                    href="{{ route('dashboard') ?? '#' }}">Trouver un terrain</a>
-                <a class="text-sm font-bold text-slate-600 hover:text-brand-green transition-colors"
-                    href="{{ route('reservations.index') ?? '#' }}">Mes Matchs</a>
-                <a class="text-sm font-bold text-slate-600 hover:text-brand-green transition-colors"
-                    href="#">Aide</a>
-            </nav>
-
-            <div class="flex items-center gap-6">
-                @auth
-                    <div class="flex items-center gap-3">
-                        <div class="hidden sm:flex flex-col text-right">
-                            <span
-                                class="text-sm font-bold text-slate-900">{{ auth()->user()->name ?? 'Utilisateur' }}</span>
-                            <span
-                                class="text-[10px] text-slate-500 uppercase tracking-widest font-black">{{ auth()->user()->role ?? 'CUSTOMER' }}</span>
-                        </div>
-                        <div
-                            class="w-10 h-10 rounded-full border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center shadow-sm">
-                            @if (auth()->user() && auth()->user()->profile_image)
-                                <img alt="Profil" class="w-full h-full object-cover"
-                                    src="{{ asset('storage/' . auth()->user()->profile_image) }}" />
-                            @else
-                                <span
-                                    class="font-bold text-slate-600 uppercase">{{ substr(auth()->user()->name ?? 'U', 0, 1) }}</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="border-l border-slate-200 pl-6 hidden sm:block">
-                        <form action="{{ route('logout') ?? '#' }}" method="POST" class="m-0">
-                            @csrf
-                            <button type="submit"
-                                class="text-sm font-bold text-slate-600 hover:text-red-600 transition-colors">
-                                Déconnexion
-                            </button>
-                        </form>
-                    </div>
-                @else
-                    <a class="text-sm font-bold text-slate-700 hover:text-brand-green px-3 py-2"
-                        href="{{ route('login') ?? '#' }}">Connexion</a>
-                @endauth
-
-            </div>
-        </div>
-    </header>
+    <x-navbar />
 
     <main class="max-w-7xl mx-auto px-4 md:px-20 py-8">
         <nav class="flex items-center gap-2 text-sm mb-6 text-slate-500">
@@ -292,8 +237,7 @@
                                         <div class="md:col-span-2">
                                             <div class="space-y-6 max-h-[320px] overflow-y-auto pr-4 custom-scrollbar">
                                                 @forelse ($stadium->reviews ?? [] as $review)
-                                                    <div
-                                                        class="border-b border-slate-100 pb-6 last:border-0 last:pb-0">
+                                                    <div class="border-b border-slate-100 pb-6 last:border-0 last:pb-0">
                                                         <div class="flex items-center gap-3 mb-3">
 
                                                             @if ($review->user && $review->user->profile_image)
@@ -594,9 +538,7 @@
         </div>
     </main>
 
-    <footer class="mt-20 border-t py-12 text-center opacity-50">
-        <p class="text-[10px] font-bold tracking-widest uppercase">© 2026 KoraBooking. All rights reserved.</p>
-    </footer>
+    <x-footer />
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

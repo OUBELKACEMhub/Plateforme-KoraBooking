@@ -11,16 +11,18 @@ use Carbon\Carbon;
 class OfferController extends Controller
 {
 
-public function storeAndAttachOffer(Request $request, $stadiumId)
+public function storeAndAttachOffer(Request $request)
 {
     $request->validate([
         'title' => 'required|string|max:255',
         'discount_percentage' => 'required|numeric|min:1|max:100',
         'start_date' => 'required|date',
         'end_date' => 'required|date|after_or_equal:start_date',
+        'stadium_id' => 'required|exists:stadiums,id', 
+        'type' => 'required|in:flash,seasonal,promo',
     ]);
 
-    $stadium = Stadium::findOrFail($stadiumId);
+    $stadium = Stadium::findOrFail($request->stadium_id);
 
     if ($stadium->manager_id !== Auth::id()) {
         abort(403, 'Action non autorisée. Ce n\'est pas votre terrain.');
@@ -31,13 +33,14 @@ public function storeAndAttachOffer(Request $request, $stadiumId)
         'discount_percentage' => $request->discount_percentage,
         'start_date' => $request->start_date,
         'end_date' => $request->end_date,
+        'type' => $request->type,
+        'creator_id' => Auth::id(),
     ]);
 
     $stadium->offers()->attach($offer->id);
 
     return back()->with('success', 'La promotion a été créée et appliquée au terrain avec succès !');
 }
-
 
     public function removeOfferFromStadium(Request $request, $stadiumId, $offerId)
 {
