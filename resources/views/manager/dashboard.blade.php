@@ -74,7 +74,7 @@
             </a>
 
             <a class="flex items-center space-x-3 text-gray-500 hover:bg-gray-50 px-4 py-3 rounded-xl font-medium transition-colors"
-                href="#">
+                href="{{ route('manager.offers') }}">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
@@ -340,7 +340,7 @@
                                     </div>
                                     <div class="text-right">
                                         <span
-                                            class="block font-bold text-gray-900">${{ $booking->final_price }}</span>
+                                            class="block font-bold text-gray-900">{{ $booking->final_price }}DH</span>
                                         <span class="inline-flex items-center text-green-600 text-xs font-medium">
                                             Confirmé
                                         </span>
@@ -370,14 +370,26 @@
                     </svg>
                 </button>
             </div>
-            <form action="{{ '#' }}" method="POST" class="p-8 space-y-6">
+            <form action="{{ route('manager.offers.store') }}" method="POST" class="p-8 space-y-6">
                 @csrf
+
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Titre de l'offre</label>
                     <input name="title" required
                         class="w-full border-gray-200 rounded-xl focus:ring-green-500 focus:border-green-500 py-3"
                         placeholder="e.g. Promo Romdane" type="text" />
                 </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Type d'offre</label>
+                    <select name="type" required
+                        class="w-full border-gray-200 rounded-xl focus:ring-green-500 focus:border-green-500 py-3">
+                        <option value="promo">Promo</option>
+                        <option value="flash">Vente Flash</option>
+                        <option value="seasonal">Saisonnière (Seasonal)</option>
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Remise (%)</label>
@@ -392,12 +404,14 @@
                             type="date" />
                     </div>
                 </div>
+
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Date de fin</label>
                     <input name="end_date" required
                         class="w-full border-gray-200 rounded-xl focus:ring-green-500 focus:border-green-500 py-3"
                         type="date" />
                 </div>
+
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Terrain applicable</label>
                     <select name="stadium_id" required
@@ -409,13 +423,15 @@
                         @endforelse
                     </select>
                 </div>
+
                 <div class="pt-4 flex space-x-4">
                     <button id="cancelModal"
                         class="flex-1 px-6 py-3 border border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-gray-50 transition-colors"
                         type="button">Annuler</button>
                     <button type="submit"
-                        class="flex-1 px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-200">Enregistrer
-                        l'offre</button>
+                        class="flex-1 px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-200">
+                        Enregistrer l'offre
+                    </button>
                 </div>
             </form>
         </div>
