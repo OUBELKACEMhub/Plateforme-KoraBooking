@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>Trouvez votre terrain - KoraBooking</x-slot>
+    <x-slot:title>Trouvez votre terrain - KoraBooking</x-slot:title>
 
     @push('styles')
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -35,6 +35,8 @@
         </style>
     @endpush
 
+
+
     <section class="relative bg-primary py-16 md:py-24 overflow-hidden">
         <div class="absolute inset-0 opacity-55">
             <div class="absolute top-0 left-0 w-full h-full"
@@ -53,6 +55,7 @@
     </section>
 
     <div class="max-w-5xl mx-auto px-4 -mt-10 relative z-20">
+
         <form action="" method="GET"
             class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-4 md:p-6 border border-slate-200 dark:border-slate-700">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -236,6 +239,20 @@
 
         </div>
     </div>
+
+    <div
+        class="mt-6 bg-orange-100/50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 rounded-2xl p-4 flex items-center justify-center gap-3 transition-transform hover:scale-[1.01]">
+        <span class="flex h-3 w-3 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+        </span>
+
+        <p class="text-slate-800 dark:text-slate-200 text-sm md:text-base font-medium">
+            Réservez maintenant et gagnez <strong class="text-orange-600 dark:text-orange-400 font-black">10 points
+                Wallet</strong> !
+        </p>
+    </div>
+
     <div class="max-w-7xl mx-auto px-4 pb-12 pt-4">
         <div class="flex flex-col lg:flex-row gap-8">
             <div class="flex-1">
