@@ -52,5 +52,5 @@ public function cancel(Request $request, $id)
     $reservation->update(['status' => 'cancelled']);
 
     return back()->with('success', 'Réservation annulée avec succès ! ' . $reservation->price . ' DH ont été ajoutés à votre Portefeuille.');
-}
+   }
 }
