@@ -12,6 +12,8 @@
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
 
     <script id="tailwind-config">
         tailwind.config = {
@@ -103,7 +105,6 @@
     <x-manager-sidebar />
 
     <main class="flex-grow h-full overflow-y-auto relative">
-        {{-- TOP HEADER COMPONENT --}}
         <header
             class="w-full sticky top-0 z-40 bg-white/80 dark:bg-emerald-950/80 backdrop-blur-xl shadow-sm shadow-emerald-900/5 flex justify-between items-center px-8 h-16">
             <div class="flex items-center gap-4">
@@ -115,30 +116,11 @@
                         placeholder="Search promotions..." type="text" />
                 </div>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-4">
-                    <button
-                        class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-emerald-900/40 rounded-full transition-colors active:scale-95">
-                        <span class="material-symbols-outlined">notifications</span>
-                    </button>
-                    <button
-                        class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-emerald-900/40 rounded-full transition-colors active:scale-95">
-                        <span class="material-symbols-outlined">help_outline</span>
-                    </button>
-                </div>
-                <div
-                    class="h-10 w-10 rounded-full overflow-hidden border-2 border-emerald-100 cursor-pointer flex items-center justify-center bg-green-600 text-white font-bold">
-                    @if (auth()->check() && auth()->user()->profile_image)
-                        <img alt="Manager profile" class="object-cover w-full h-full"
-                            src="{{ asset('storage/' . auth()->user()->profile_image) }}" />
-                    @else
-                        {{ substr(auth()->user()->name ?? 'M', 0, 1) }}
-                    @endif
-                </div>
-            </div>
+            <x-navbar-actions />
         </header>
 
         <section class="p-8 max-w-7xl mx-auto space-y-10">
+            <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div
                     class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 flex flex-col justify-between h-40">
@@ -146,9 +128,6 @@
                         <div class="bg-primary-fixed/30 p-2 rounded-lg">
                             <span class="material-symbols-outlined text-primary-container">campaign</span>
                         </div>
-                        <span
-                            class="text-xs font-semibold text-on-tertiary-container bg-tertiary-fixed/20 px-2 py-1 rounded">+12%
-                            vs last month</span>
                     </div>
                     <div>
                         <h4 class="text-slate-500 text-sm font-medium">Total Active Offers</h4>
@@ -163,8 +142,8 @@
                             <span class="material-symbols-outlined">payments</span>
                         </div>
                         <div>
-                            <h4 class="text-green-50 text-sm font-medium">Total Revenue from Promotions</h4>
-                            <p class="text-3xl font-bold tracking-tight">KSh 142,500</p>
+                            <h4 class="text-green-50 text-sm font-medium">Promotions</h4>
+                            <p class="text-xl font-bold tracking-tight">Gérez vos offres</p>
                         </div>
                     </div>
                     <div class="absolute -right-8 -bottom-8 opacity-10">
@@ -181,99 +160,109 @@
                     </div>
                     <div>
                         <h4 class="text-slate-500 text-sm font-medium">Upcoming Expirations</h4>
-                        <p class="text-3xl font-bold text-primary tracking-tight">03 <span
+                        <p class="text-3xl font-bold text-primary tracking-tight">0 <span
                                 class="text-sm font-normal text-slate-400 ml-1">in next 48h</span></p>
                     </div>
                 </div>
             </div>
 
-            {{-- CREATE NEW OFFER SECTION --}}
-            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8" id="offerFormContainer">
                 <div class="lg:col-span-3 bg-surface-container-lowest rounded-xl p-8 shadow-sm border border-gray-100">
-                    <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+                    <h2 id="formTitle" class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
                         <span class="material-symbols-outlined text-green-600">add_circle</span>
-                        Create New Offer
+                        Créer une Nouvelle Offre
                     </h2>
 
-                    <form action="#" method="POST" class="space-y-6">
+                    <!-- Le Formulaire -->
+                    <form id="offerForm" action="{{ route('manager.offers.store') }}" method="POST" class="space-y-6">
                         @csrf
+                        <div id="methodSpoof"></div> <!-- Hna kay-tzad PUT f la modification -->
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
-                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Offer
-                                    Name</label>
-                                <input name="name"
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Titre de
+                                    l'offre</label>
+                                <input name="title"
                                     class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none"
-                                    placeholder="e.g. Weekend Warrior Flash Sale" type="text" required />
+                                    placeholder="e.g. Promo KoraBooking" type="text" required />
                             </div>
+
                             <div class="space-y-2">
-                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Offer
-                                    Type</label>
-                                <select name="type"
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Type
+                                    d'offre</label>
+                                <select name="type" required
                                     class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none appearance-none">
-                                    <option value="flash">Flash Sale</option>
-                                    <option value="seasonal">Seasonal Discount</option>
-                                    <option value="welcome">New User Welcome</option>
-                                    <option value="loyalty">Loyalty Reward</option>
+                                    <option value="" disabled selected>Choisissez le type</option>
+                                    <option value="promo">Promo</option>
+                                    <option value="flash">Flash</option>
+                                    <option value="seasonal">Seasonal</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
-                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Discount
-                                    Percentage</label>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Remise
+                                    (%)</label>
                                 <div class="relative">
                                     <input name="discount_percentage"
                                         class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none"
-                                        placeholder="20" type="number" min="1" max="100" />
+                                        placeholder="20" type="number" min="1" max="100" required />
                                     <span
                                         class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
                                 </div>
                             </div>
+
                             <div class="space-y-2">
-                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Pitch
-                                    Type</label>
-                                <div class="flex gap-2 flex-wrap">
-                                    <span
-                                        class="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full cursor-pointer">All
-                                        Pitches</span>
-                                    <span
-                                        class="bg-green-50 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full cursor-pointer hover:bg-green-100 transition-colors border border-green-200">5-A-Side</span>
-                                    <span
-                                        class="bg-green-50 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full cursor-pointer hover:bg-green-100 transition-colors border border-green-200">11-A-Side</span>
-                                </div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Terrain
+                                    applicable</label>
+                                <select name="stadium_id" required
+                                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none appearance-none">
+                                    <option value="" disabled selected>Sélectionnez un terrain</option>
+                                    @forelse($stadiums ?? [] as $stadium)
+                                        <option value="{{ $stadium->id }}">{{ $stadium->name }}</option>
+                                    @empty
+                                        <option disabled>Aucun terrain disponible</option>
+                                    @endforelse
+                                </select>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
-                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Start
-                                    Date</label>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Date de
+                                    début</label>
                                 <input name="start_date"
                                     class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none"
-                                    type="date" />
+                                    type="date" required />
                             </div>
+
                             <div class="space-y-2">
-                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">End
-                                    Date</label>
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Date de
+                                    fin</label>
                                 <input name="end_date"
                                     class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none"
-                                    type="date" />
+                                    type="date" required />
                             </div>
                         </div>
 
-                        <button
-                            class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-700 hover:shadow-lg hover:shadow-green-600/20 transition-all active:scale-95"
-                            type="submit">
-                            Launch Promotion
-                        </button>
+                        <div class="flex gap-4">
+                            <button type="submit" id="submitBtn"
+                                class="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-700 hover:shadow-lg transition-all active:scale-95">
+                                Lancer la Promotion
+                            </button>
+                            <button type="button" id="cancelEditBtn" onclick="cancelEdit()"
+                                class="hidden bg-gray-100 text-gray-600 py-4 px-6 rounded-xl font-bold text-lg hover:bg-gray-200 transition-all active:scale-95">
+                                Annuler
+                            </button>
+                        </div>
                     </form>
                 </div>
 
                 <div class="lg:col-span-2 relative rounded-xl overflow-hidden group h-full min-h-[400px]">
                     <img alt="Stadium lights"
                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        src="https://images.unsplash.com/photo-1518605368461-1ee125b42d76?q=80&w=1000&auto=format&fit=crop" />
+                        src="https://images.unsplash.com/photo-1511886929837-354d827aae26?q=80&w=2000&auto=format&fit=crop" />
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 p-8 text-white">
                         <span
@@ -286,48 +275,35 @@
                 </div>
             </div>
 
-            {{-- CURRENT OFFERS GRID --}}
+            <!-- Liste des Offres -->
             <div class="space-y-6">
                 <div class="flex justify-between items-center">
                     <h2 class="text-2xl font-extrabold text-gray-800 tracking-tight">Active Campaigns</h2>
-                    <div class="flex gap-2">
-                        <button
-                            class="bg-white border border-gray-200 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                            <span class="material-symbols-outlined text-gray-600">filter_list</span>
-                        </button>
-                        <button
-                            class="bg-white border border-gray-200 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                            <span class="material-symbols-outlined text-gray-600">sort</span>
-                        </button>
-                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 gap-4">
-
-                    {{-- CORRECT SYNTAX: No curly braces around @foreach --}}
-                    @foreach ($offers as $offer)
+                    @forelse ($offers as $offer)
                         @php
-                            // Logique d'affichage selon le statut et le type
-$isPast = \Carbon\Carbon::parse($offer->end_date)->isPast();
-$isFuture = \Carbon\Carbon::parse($offer->start_date)->isFuture();
+                            $isPast = \Carbon\Carbon::parse($offer->end_date)->isPast();
+                            $isFuture = \Carbon\Carbon::parse($offer->start_date)->isFuture();
 
-$statusText = 'Active';
-$statusClass = 'bg-green-100 text-green-700';
+                            $statusText = 'Active';
+                            $statusClass = 'bg-green-100 text-green-700';
 
-if ($isPast) {
-    $statusText = 'Expired';
-    $statusClass = 'bg-red-50 text-red-600';
-} elseif ($isFuture) {
-    $statusText = 'Scheduled';
-    $statusClass = 'bg-gray-100 text-gray-600';
-}
+                            if ($isPast) {
+                                $statusText = 'Expired';
+                                $statusClass = 'bg-red-50 text-red-600';
+                            } elseif ($isFuture) {
+                                $statusText = 'Scheduled';
+                                $statusClass = 'bg-gray-100 text-gray-600';
+                            }
 
-$icon = $offer->type == 'flash' ? 'bolt' : 'local_offer';
-$colorTheme = $offer->type == 'flash' ? 'green' : 'orange';
+                            $icon = $offer->type == 'flash' ? 'bolt' : 'local_offer';
+                            $colorTheme = $offer->type == 'flash' ? 'green' : 'orange';
                         @endphp
 
                         <div
-                            class="bg-white p-6 rounded-xl border border-gray-200 flex flex-wrap md:flex-nowrap items-center gap-6 group hover:shadow-md hover:border-{{ $colorTheme }}-200 transition-all {{ $isPast ? 'opacity-75' : '' }}">
+                            class="bg-white p-6 rounded-xl border border-gray-200 flex flex-wrap md:flex-nowrap items-center gap-6 group hover:shadow-md transition-all {{ $isPast ? 'opacity-75' : '' }}">
 
                             <div
                                 class="w-16 h-16 bg-{{ $colorTheme }}-50 rounded-full flex items-center justify-center flex-shrink-0 text-{{ $colorTheme }}-600">
@@ -336,7 +312,7 @@ $colorTheme = $offer->type == 'flash' ? 'green' : 'orange';
 
                             <div class="flex-grow">
                                 <h4 class="font-bold text-gray-800 text-lg">{{ ucfirst($offer->type) }} Offer</h4>
-                                <p class="text-gray-500 text-sm">Applied to your Pitches</p>
+                                <p class="text-gray-500 text-sm">{{ $offer->title }}</p>
                             </div>
 
                             <div class="flex items-center gap-12 flex-shrink-0">
@@ -358,30 +334,97 @@ $colorTheme = $offer->type == 'flash' ? 'green' : 'orange';
                                     <span
                                         class="{{ $statusClass }} px-3 py-1 rounded-full text-xs font-bold">{{ $statusText }}</span>
 
-                                    <div class="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="text-gray-400 hover:text-blue-600 transition-colors">
+                                    <div
+                                        class="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+
+                                        <!-- Bouton Edit li kay-khdem b JS -->
+                                        <button type="button"
+                                            onclick="editOffer({{ $offer->id }}, '{{ addslashes($offer->title) }}', '{{ $offer->type }}', {{ $offer->discount_percentage }}, '{{ \Carbon\Carbon::parse($offer->start_date)->format('Y-m-d') }}', '{{ \Carbon\Carbon::parse($offer->end_date)->format('Y-m-d') }}', '{{ $offer->stadiums->first()->id ?? '' }}')"
+                                            class="text-gray-400 hover:text-blue-600 transition-colors"
+                                            title="Modifier l'offre">
                                             <span class="material-symbols-outlined">edit</span>
                                         </button>
-                                        <button class="text-gray-400 hover:text-red-500 transition-colors">
-                                            <span class="material-symbols-outlined">delete</span>
-                                        </button>
+
+                                        <!-- Bouton Delete (Route m-rygla l manager.offers.destroy) -->
+                                        <form action="{{ route('manager.offers.destroy', $offer->id) }}"
+                                            method="POST" class="m-0"
+                                            onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette offre ?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="text-gray-400 hover:text-red-500 transition-colors flex items-center justify-center"
+                                                title="Supprimer l'offre">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </button>
+                                        </form>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-
-                    @if ($offers->isEmpty())
+                    @empty
                         <div class="text-center py-10 text-gray-500 bg-gray-50 rounded-xl border border-gray-200">
                             <span class="material-symbols-outlined text-4xl mb-2 text-gray-400">inbox</span>
-                            <p>You haven't created any offers yet.</p>
+                            <p>Vous n'avez pas encore créé d'offres.</p>
                         </div>
-                    @endif
-
+                    @endforelse
                 </div>
             </div>
         </section>
     </main>
+
+    <!-- 🔥 SCRIPT JAVASCRIPT DYAL L-FORMULAIRE 🔥 -->
+    <script>
+        const form = document.getElementById('offerForm');
+        const formTitle = document.getElementById('formTitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const cancelBtn = document.getElementById('cancelEditBtn');
+        const methodSpoof = document.getElementById('methodSpoof');
+        const defaultAction = "{{ route('manager.offers.store') }}";
+
+        function editOffer(id, title, type, discount, startDate, endDate, stadiumId) {
+            // 1. URL + Méthode
+            form.action = `/manager/offres/${id}`;
+            methodSpoof.innerHTML = '<input type="hidden" name="_method" value="PUT">';
+
+            // 2. Remplir les champs
+            form.querySelector('[name="title"]').value = title;
+            form.querySelector('[name="type"]').value = type;
+            form.querySelector('[name="discount_percentage"]').value = discount;
+            form.querySelector('[name="start_date"]').value = startDate;
+            form.querySelector('[name="end_date"]').value = endDate;
+            if (stadiumId) form.querySelector('[name="stadium_id"]').value = stadiumId;
+
+            // 3. Modifier le design du formulaire
+            formTitle.innerHTML =
+                '<span class="material-symbols-outlined text-blue-600">edit_note</span> Modifier l\'offre';
+            submitBtn.textContent = 'Enregistrer les modifications';
+            submitBtn.classList.replace('bg-green-600', 'bg-blue-600');
+            submitBtn.classList.replace('hover:bg-green-700', 'hover:bg-blue-700');
+
+            cancelBtn.classList.remove('hidden');
+
+            // 4. Scroll vers le formulaire (Animation n9iya)
+            document.getElementById('offerFormContainer').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        function cancelEdit() {
+            form.reset();
+            form.action = defaultAction;
+            methodSpoof.innerHTML = '';
+
+            formTitle.innerHTML =
+                '<span class="material-symbols-outlined text-green-600">add_circle</span> Créer une Nouvelle Offre';
+            submitBtn.textContent = 'Lancer la Promotion';
+            submitBtn.classList.replace('bg-blue-600', 'bg-green-600');
+            submitBtn.classList.replace('hover:bg-blue-700', 'hover:bg-green-700');
+
+            cancelBtn.classList.add('hidden');
+        }
+    </script>
 </body>
 
 </html>

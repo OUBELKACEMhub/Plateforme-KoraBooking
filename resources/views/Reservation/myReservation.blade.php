@@ -1,17 +1,23 @@
 <x-layout>
 
     <main class="min-h-screen">
-        <section class="relative h-[307px] bg-primary-container overflow-hidden flex items-end px-4 md:px-12 pb-12">
+        <section class="relative h-[307px] bg-emerald-50 overflow-hidden flex items-end px-4 md:px-12 pb-12">
             <div class="absolute inset-0 z-0">
                 <img alt="Stadium background" class="w-full h-full object-cover opacity-30 grayscale"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1h9YQB0X91-X1p-O7jfK65KJuFp6Hq3mySkX-Tr2lavZgbz_coZqB6D56T4n4deLXG68kUrjCw5Vtomu2adGlkC3r2QoEiwGls2nJg1FULMZtHY2gihZiaP5PfcmDiQhTq8YYhKv8xGW98QyDcStl5430wa_WIgQ49g3zyBxdW1nBbt2C8NDc_9vGkDaD1pAsseK3Tl5OzWdnaPlqkuuVeePz1sBAMUh408sw4sHKPrYrUNbVDgnOaIVsFSvkd782D7NfrKtmdyk" />
-                <div class="absolute inset-0 bg-gradient-to-t from-primary-container via-transparent to-transparent">
+
+
+                <div class="absolute inset-0 bg-gradient-to-t from-emerald-200 via-emerald-50/60 to-transparent">
                 </div>
             </div>
+
             <div class="relative z-10 w-full max-w-7xl mx-auto">
-                <p class="font-label text-on-primary-container text-sm tracking-[0.2em] uppercase mb-2">Espace Joueur
+                <p class="font-label text-emerald-600 font-extrabold text-sm tracking-[0.2em] uppercase mb-2">
+                    Espace Joueur
                 </p>
-                <h1 class="font-headline font-bold text-4xl md:text-5xl text-white tracking-tight">Mes Réservations</h1>
+                <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-emerald-950 tracking-tight">
+                    Mes Réservations
+                </h1>
             </div>
         </section>
 

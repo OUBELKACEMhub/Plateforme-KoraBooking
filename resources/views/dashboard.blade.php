@@ -69,16 +69,24 @@
                             placeholder="Casablanca, Rabat..." type="text" />
                     </div>
                 </div>
-                <div class="relative">
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Prix maximum
-                        (DH/h)</label>
-                    <div class="relative group">
-                        <span
-                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">payments</span>
-                        <input name="max_price" value="{{ request('max_price') }}"
-                            class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
-                            placeholder="Ex: 300" type="number" />
+                <div
+                    class="relative group flex flex-col gap-3 p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+
+                    <div class="flex items-center justify-between">
+                        <div
+                            class="flex items-center gap-2 text-slate-500 group-focus-within:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-[20px]">payments</span>
+                            <span class="text-sm font-semibold">Prix maximum</span>
+                        </div>
+                        <div class="text-sm font-bold text-primary">
+                            <span id="price-output">{{ request('max_price', 500) }}</span> DH
+                        </div>
                     </div>
+
+                    <input type="range" name="max_price" id="max_price_range" min="50" max="1000"
+                        step="50" value="{{ request('max_price', 500) }}"
+                        oninput="document.getElementById('price-output').innerText = this.value"
+                        class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary dark:bg-slate-700" />
                 </div>
                 <button type="submit"
                     class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-95">
