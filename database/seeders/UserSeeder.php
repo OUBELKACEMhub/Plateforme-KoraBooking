@@ -2,28 +2,36 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Faker\Factory as Faker;
 
 class UserSeeder extends Seeder
 {
-    
-public function run(): void
-{
-    \App\Models\User::create([
-        'name' => 'Ahmed Admin',
-        'email' => 'admin@korabooking.ma',
-        'password' => bcrypt('password'),
-        'role' => 'admin',
-        'referral_code' => 'ADMIN2026'
-    ]);
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $faker = Faker::create('fr_FR'); 
 
-    \App\Models\User::create([
-        'name' => 'Yassine Client',
-        'email' => 'yassine@gmail.com',
-        'password' => bcrypt('password'),
-        'role' => 'customer',
-        'referral_code' => 'YASS77'
-    ]);
-}
+        for ($i = 0; $i < 10; $i++) {
+            
+            $name = $faker->name;
+
+            User::create([
+                'name' => $name,
+                'email' => $faker->unique()->safeEmail,
+                
+                'profile_image' => 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&background=random&color=fff',
+                
+                'password' => Hash::make('password'),
+                
+                'role' => $faker->randomElement(['customer', 'manager']),
+                
+                'wallet_balance' => $faker->randomFloat(2, 0, 1000), 
+            ]);
+        }
+    }
 }

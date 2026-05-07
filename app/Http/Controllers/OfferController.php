@@ -11,6 +11,8 @@ use Carbon\Carbon;
 class OfferController extends Controller
 {
 
+
+
 public function storeAndAttachOffer(Request $request)
 {
     $request->validate([
@@ -54,4 +56,8 @@ public function storeAndAttachOffer(Request $request)
 
     return back()->with('success', 'L\'offre a été retirée du terrain avec succès !');
 }
+
+
+
+
 }

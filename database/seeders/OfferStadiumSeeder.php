@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Offer;
 use App\Models\Stadium;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class OfferStadiumSeeder extends Seeder
 {
@@ -13,24 +14,24 @@ class OfferStadiumSeeder extends Seeder
      */
     public function run(): void
     {
-        $offers = Offer::all();
-        $stadiums = Stadium::all();
+        $offerIds = Offer::pluck('id')->toArray();
+        $stadiumIds = Stadium::pluck('id')->toArray();
 
-        if ($offers->isEmpty() || $stadiums->isEmpty()) {
-            $this->command->info('tu doit  cree seederes de les tables  offres et les terrains avant  ma t-lanci had l-seeder!');
+        if (empty($offerIds) || empty($stadiumIds)) {
+            $this->command->info('Veuillez d\'abord remplir les tables Offers et Stadiums.');
             return;
         }
 
-        foreach ($offers as $offer) {
+        for ($i = 0; $i < 7; $i++) {
             
-            
-            $nombreDeTerrains = rand(1, min(3, $stadiums->count())); 
-            
-            $randomStadiumIds = $stadiums->random($nombreDeTerrains)->pluck('id');
+            $randomOfferId = $offerIds[array_rand($offerIds)];
+            $randomStadiumId = $stadiumIds[array_rand($stadiumIds)];
 
-            $offer->stadiums()->syncWithoutDetaching($randomStadiumIds);
+       
+            DB::table('offer_stadium')->insertOrIgnore([
+                'offer_id' => $randomOfferId,
+                'stadium_id' => $randomStadiumId,
+            ]);
         }
-
-        $this->command->info('Les relations entre les offres et les terrains a eté ajouté avec succée dans table offer_stadium!');
     }
 }

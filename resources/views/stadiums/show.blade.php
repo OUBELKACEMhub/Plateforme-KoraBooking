@@ -418,7 +418,6 @@
 
             </div>
 
-            {{-- ── RIGHT COLUMN — Booking Sidebar ── --}}
             <div class="lg:col-span-1">
                 <div
                     class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl shadow-slate-200/60 dark:shadow-slate-900/60 border border-slate-100 dark:border-slate-700 p-6 sticky top-24 overflow-hidden relative">
@@ -430,10 +429,8 @@
                         <input type="hidden" name="reservation_time" id="selected-time" value="18:00">
                         <input type="hidden" name="total_amount" value="{{ $stadium->price + 3 ?? 45 }}">
 
-                        {{-- STEP 1 — Reservation --}}
                         <div id="step-1">
 
-                            {{-- Flash messages --}}
                             @if (session('error'))
                                 <div
                                     class="mb-5 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-start gap-3 text-sm font-semibold">
@@ -565,8 +562,7 @@
                                 <div>
                                     <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Total à
                                         payer</p>
-                                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-0.5"
-                                        id="summary-time">Aujourd'hui à 18:00</p>
+
                                 </div>
                                 <span class="font-display font-black text-2xl text-primary">
                                     {{ $total ?? ($stadium->discounted_price ?? ($stadium->price ?? 43)) + 3 }} DH

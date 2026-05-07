@@ -11,10 +11,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        
+        // 1. Hado les Aliases li kano 3ndek (Khllinahom kima homa)
         $middleware->alias([
-        'manager' => \App\Http\Middleware\IsManager::class,
-        'customer' => \App\Http\Middleware\IsCustomer::class,
-    ]);
+            'manager' => \App\Http\Middleware\IsManager::class,
+            'customer' => \App\Http\Middleware\IsCustomer::class,
+            'admin' => \App\Http\Middleware\IsAdmin::class,
+        ]);
+
+       
+        $middleware->web(append: [
+            \App\Http\Middleware\CheckBannedUser::class,
+        ]);
+        
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

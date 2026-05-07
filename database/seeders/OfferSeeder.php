@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Offer;
-use App\Models\Stadium;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class OfferSeeder extends Seeder
 {
@@ -15,48 +15,24 @@ class OfferSeeder extends Seeder
      */
     public function run(): void
     {
-        $creator = User::where('role', 'admin')->first() ?? User::first();
+        $faker = Faker::create('fr_FR');
 
-        if (!$creator) {
-            $this->command->info("Makayn 7ta user f la base. Khassk t-seeder les users 9bel les offres.");
-            return;
+  
+        $managersIds = User::pluck('id')->toArray();
+
+        for ($i = 0; $i < 10; $i++) {
+            
+            $startDate = $faker->dateTimeBetween('-1 month', '+1 month');
+            
+            $endDate = (clone $startDate)->modify('+' . rand(3, 15) . ' days');
+
+            Offer::create([
+                'creator_id' => $faker->randomElement($managersIds) ?? 1,
+                'discount_percentage' => $faker->numberBetween(10, 50), // Remise bin 10% w 50%
+                'type' => $faker->randomElement(['flash', 'seasonal', 'promo']), // L-anwa3 li 3ndek
+                'start_date' => Carbon::parse($startDate)->format('Y-m-d'),
+                'end_date' => Carbon::parse($endDate)->format('Y-m-d'),
+            ]);
         }
-
-        // 2. Le Tableau des offres (Data)
-        $offers = [
-            [
-                'type' => 'seasonal', // Promo Ramadan (Mounassaba)
-                'discount_percentage' => 20.00,
-                'start_date' => Carbon::now()->startOfDay(),
-                'end_date' => Carbon::now()->addDays(30)->endOfDay(),
-            ],
-            [
-                'type' => 'seasonal', // Happy Hour Weekend (Mawsimi/Moukarrar)
-                'discount_percentage' => 15.00,
-                'start_date' => Carbon::now()->next(Carbon::SATURDAY)->startOfDay(),
-                'end_date' => Carbon::now()->next(Carbon::SUNDAY)->endOfDay(),
-            ],
-            [
-                'type' => 'flash', // Flash Sale (Takhfid sari3)
-                'discount_percentage' => 50.00,
-                'start_date' => Carbon::now()->startOfDay(),
-                'end_date' => Carbon::now()->addDays(2)->endOfDay(),
-            ]
-        ];
-        $stadiums = Stadium::all();
-
-        foreach ($offers as $offerData) {
-            $offerData['creator_id'] = $creator->id;
-
-         $offer = Offer::create($offerData);
-
-            if ($stadiums->count() > 0) {
-                $randomStadiumsIds = $stadiums->random(min(2, $stadiums->count()))->pluck('id')->toArray();
-                
-                $offer->stadiums()->attach($randomStadiumsIds);
-            }
-        }
-
-        $this->command->info('Les offres a été ajouter avec  succeés avec leurs les terrains  !');
     }
 }

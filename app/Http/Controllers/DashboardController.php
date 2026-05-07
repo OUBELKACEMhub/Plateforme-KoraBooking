@@ -48,6 +48,11 @@ class DashboardController extends Controller
     }
 
 
+    public function aide(){
+         return view('aide');
+    }
+
+
     public function show($id)
     {
         $stadium = Stadium::findOrFail($id);

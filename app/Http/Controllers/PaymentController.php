@@ -30,7 +30,6 @@ class PaymentController extends Controller
 
 public function process(Request $request)
 {
-    // 1. Validation dynamique (la carte n'est requise que si 'card' est choisi)
     $request->validate([
         'stadium_id'       => 'required|exists:stadiums,id',
         'reservation_date' => 'required|date',
@@ -80,7 +79,7 @@ public function process(Request $request)
         'start_time'  => $startTime,
         'end_time'    => $endTime,
         'final_price' => $finalPrice,
-        'status'      => 'confirmed', // 'pending' si tu attends le retour webhook d'une banque
+        'status'      => 'pending', 
     ]);
 
     return redirect()->route('dashboard')

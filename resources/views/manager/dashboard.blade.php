@@ -82,7 +82,8 @@
                     <div>
                         <p class="text-sm font-semibold text-slate-400 mb-1 uppercase tracking-wider">Total Revenus</p>
                         <h3 class="text-3xl font-extrabold text-slate-900">{{ number_format($totalRevenue ?? 0, 2) }}
-                            <span class="text-lg text-slate-400 font-medium">DH</span></h3>
+                            <span class="text-lg text-slate-400 font-medium">DH</span>
+                        </h3>
                     </div>
                     <div class="bg-blue-50/80 p-4 rounded-2xl text-blue-600 group-hover:scale-110 transition-transform">
                         <span class="material-symbols-outlined text-3xl">account_balance_wallet</span>
@@ -198,7 +199,7 @@
                                             action="{{ route('manager.reservations.updateStatus', $reservation->id) }}"
                                             method="POST" class="flex-1 m-0">
                                             @csrf @method('PATCH')
-                                            <input type="hidden" name="status" value="canceled">
+                                            <input type="hidden" name="status" value="cancelled">
                                             <button type="submit"
                                                 class="w-full bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 border border-slate-200 hover:border-red-200 text-xs font-bold py-2.5 rounded-xl transition-colors">
                                                 Refuser
