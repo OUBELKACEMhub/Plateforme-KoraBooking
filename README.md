@@ -4,24 +4,24 @@ Voici quelques captures d'écran illustrant les différentes interfaces de KoraB
 
 ### 🚪 Authentification
 
-![Connexion](screenshots/login.jpg)
+![Connexion](screenshots/login.png)
 
 ### 👤 Espace Client
 
 **Exploration et Carte Interactive :**
-![Accueil et Carte](screenshots/2.jpg)
+![Accueil et Carte](screenshots/2.png)
 
 **Détails du terrain & IA Météo (Korabot Advisor) :**
-![Détails Terrain](screenshots/reserv1.jpg)
+![Détails Terrain](screenshots/reserv1.png)
 
 **Système d'évaluation et Réservation :**
-![Évaluations et Réservation](screenshots/reser2.jpg)
+![Évaluations et Réservation](screenshots/reser2.png)
 
 **Paiement Sécurisé & Wallet :**
 ![Paiement](screenshots/payment.png)
 
 **Centre d'Aide :**
-![Page Aide](screenshots/aide_page.jpg)
+![Page Aide](screenshots/aide_page.png)
 
 ### 🏢 Espace Manager
 
@@ -29,7 +29,7 @@ Voici quelques captures d'écran illustrant les différentes interfaces de KoraB
 ![Dashboard Manager](screenshots/manager_dashboard.png)
 
 **Gestion des Infrastructures :**
-![Gestion Terrains](screenshots/manager_terains.jpg)
+![Gestion Terrains](screenshots/manager_terains.png)
 
 ### 🛡️ Espace Administration
 
