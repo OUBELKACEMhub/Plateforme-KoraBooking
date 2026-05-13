@@ -41,7 +41,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/Aide', [DashboardController::class, 'aide'])->name('aide.index');
     Route::get('/stadiums/{id}', [DashboardController::class, 'show'])->name('stadiums.show');
-    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::get('/payment/{id}', [PaymentController::class, 'show'])->name('payment.show');
     Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
     Route::get('/reservation-success', function() {

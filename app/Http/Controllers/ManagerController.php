@@ -155,10 +155,6 @@ public function storeStadium(Request $request)
 
 
 
-
-
-
-
 public function getManagerReviews()
 {
     $managerId = Auth::id();
